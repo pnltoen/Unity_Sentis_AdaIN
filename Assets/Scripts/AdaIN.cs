@@ -5,7 +5,7 @@ using UnityEngine;
 using Unity.Barracuda;
 using UnityEngine.UI;
 
-public class Inference : MonoBehaviour
+public class AdaIN : MonoBehaviour
 {
     public NNModel AdainModel;
     private Model m_RuntimeModel;
