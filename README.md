@@ -1,6 +1,6 @@
 # Barracuda_AdaIN
 
-A special hanks to Sky Kim. Visit [Sky's github](https://github.com/skykim).
+A special thanks to Sky Kim. Visit [Sky's github](https://github.com/skykim).
 
 Origianl Model : [naoto0804 / pytorch-AdaIN](https://github.com/naoto0804/pytorch-AdaIN)
 
