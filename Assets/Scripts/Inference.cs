@@ -1,4 +1,5 @@
 using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.Barracuda;
@@ -13,6 +14,11 @@ public class Inference : MonoBehaviour
     IWorker worker;
     public GameObject _rawstyle;
     RawImage rawImageTexture;
+    Texture2D[] textures;
+    Texture2D antimonocromatismo;
+    Texture2D asheville;
+    Texture2D brushstrokes;
+    Texture2D contrast_of_forms;
     
         public enum style_list
     {
@@ -32,8 +38,22 @@ public class Inference : MonoBehaviour
     {
         m_RuntimeModel = ModelLoader.Load(AdainModel);
         rawImageTexture = _rawstyle.GetComponent<RawImage>();
-        set_style = style_list.antimonocromatismo;
+        set_style = (style_list)0;
+        LoadResources();
         excute();
+    }
+
+    void LoadResources()
+    {
+        int enumLength = Enum.GetValues(typeof(style_list)).Length;
+    
+        textures = new Texture2D[enumLength];
+
+        for (int i=0; i < enumLength; i++)
+        {
+            string _name = ((style_list)i).ToString();
+            textures[i] = Resources.Load<Texture2D>(_name);
+        }
     }
 
     void excute()
@@ -41,7 +61,7 @@ public class Inference : MonoBehaviour
         var worker = WorkerFactory.CreateWorker(WorkerFactory.Type.ComputePrecompiled, m_RuntimeModel);
         Inputs = new Dictionary<string, Tensor>();
         Tensor t_content = new Tensor(content, 3);
-        Tensor t_style = new Tensor(rawImageTexture.texture, 3);
+        Tensor t_style = new Tensor(textures[(int)set_style], 3);
         Inputs.Add("content", t_content);
         Inputs.Add("style", t_style);
 
@@ -56,44 +76,15 @@ public class Inference : MonoBehaviour
     }
     void StyleChanged()
     {    
-        Texture2D antimonocromatismo = Resources.Load<Texture2D>("antimonocromatismo");
-        Texture2D asheville = Resources.Load<Texture2D>("asheville");
-        Texture2D brushstrokes = Resources.Load<Texture2D>("brushstrokes");
-        Texture2D contrast_of_forms = Resources.Load<Texture2D>("contrast_of_forms");
-
         if (set_style == prev_condition)
         {
             Debug.Log("Not updated!");
             return;
         }
-        else if (set_style == style_list.antimonocromatismo)
-        {
-            rawImageTexture.texture = antimonocromatismo;
-            prev_condition = style_list.antimonocromatismo;
-            excute();
-            Debug.Log("Updated!");
-        }
-        else if (set_style == style_list.asheville)
-        {
-            rawImageTexture.texture = asheville;
-            prev_condition = style_list.asheville;
-            excute();
-            Debug.Log("Updated!");
-        }
-        else if (set_style == style_list.brushstrokes)
-        {
-            rawImageTexture.texture = brushstrokes;
-            prev_condition = style_list.brushstrokes;
-            excute();
-            Debug.Log("Updated!");
-        }
-        else if (set_style == style_list.contrast_of_forms)
-        {
-            rawImageTexture.texture = contrast_of_forms;
-            prev_condition = style_list.contrast_of_forms;
-            excute();
-            Debug.Log("Updated!");
-        }
+        
+        rawImageTexture.texture = textures[(int)set_style];
+        prev_condition = set_style;
+        excute();
     }
 
     void Awake()
