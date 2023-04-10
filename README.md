@@ -8,4 +8,4 @@ All needed files are added on "Asset" folder. As an example I set 4 styles. Infe
 
 If you want to edit code. I highly recommend import styles to "Resources" folder and edit the enum field (style_list).
 
-![Result](https://github.com/pnltoen/Barracuda_AdaIN/blob/master/Result.gif)
+![Result](https://user-images.githubusercontent.com/85833046/230900196-66232d12-bfe4-4d68-bb41-d90adf8022ae.gif)
