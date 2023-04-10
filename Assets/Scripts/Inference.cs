@@ -15,10 +15,6 @@ public class Inference : MonoBehaviour
     public GameObject _rawstyle;
     RawImage rawImageTexture;
     Texture2D[] textures;
-    Texture2D antimonocromatismo;
-    Texture2D asheville;
-    Texture2D brushstrokes;
-    Texture2D contrast_of_forms;
     
         public enum style_list
     {
