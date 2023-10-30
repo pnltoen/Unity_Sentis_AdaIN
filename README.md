@@ -1,4 +1,4 @@
-# Barracuda_AdaIN
+# Unity_Sentis_AdaIN
 
 A special thanks to Sky Kim. Visit [Sky's github](https://github.com/skykim).
 
