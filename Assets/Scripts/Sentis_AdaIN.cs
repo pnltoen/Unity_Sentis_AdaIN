@@ -4,6 +4,7 @@ using System;
 using UnityEngine;
 using Unity.Sentis;
 using UnityEngine.UI;
+using UnityEngine.Profiling;
 
 public class Sentis_AdaIN : MonoBehaviour
 {
@@ -68,6 +69,7 @@ public class Sentis_AdaIN : MonoBehaviour
 
     void Sentis_Execute()
     {
+        Profiler.BeginSample("Sentis");
         //Reset
         InputTensors = new Dictionary<string, Tensor>();
         //Resize
@@ -83,6 +85,7 @@ public class Sentis_AdaIN : MonoBehaviour
         t_style.Dispose();
         t_content.Dispose();
         t_output.Dispose();
+        Profiler.EndSample();
     }
 
     void LoadResources()
