@@ -32,7 +32,7 @@ public class Sentis_AdaIN : MonoBehaviour
         asheville,
         brushstrokes,
         contrast_of_forms,
-        en_campo_gris,
+        /*en_campo_gris,
         flower_of_life,
         goeritz,
         impronte_d_artista,
@@ -47,7 +47,7 @@ public class Sentis_AdaIN : MonoBehaviour
         trial,
         woman_in_peasant_dress,
         woman_in_peasant_dress_cropped,
-        woman_with_hat_matisse
+        woman_with_hat_matisse*/
     }
     public style_list set_style = style_list.antimonocromatismo;
     Texture2D[] textures;
@@ -69,18 +69,26 @@ public class Sentis_AdaIN : MonoBehaviour
 
     void Sentis_Execute()
     {
-        Profiler.BeginSample("Sentis");
         //Reset
         InputTensors = new Dictionary<string, Tensor>();
+        Profiler.BeginSample("Textrues to Tensors");
         //Resize
         t_style = TextureConverter.ToTensor(textures[(int)set_style], 512, 512, 3); //이미지 크기 조절
         t_content = TextureConverter.ToTensor(_content);
+        Profiler.EndSample();
+        Profiler.BeginSample("Inputs");
         //Add
         InputTensors.Add("style", t_style);
         InputTensors.Add("content", t_content);
+        Profiler.EndSample();
+        Profiler.BeginSample("Excute the engine");
         //Output
         TensorFloat t_output = m_Engine.Execute(InputTensors).PeekOutput() as TensorFloat;
+        Profiler.EndSample();
+        Profiler.BeginSample("Tensor to texture");
         TextureConverter.RenderToTexture(t_output, result);
+        Profiler.EndSample();
+        Profiler.BeginSample("Dispose");
         //Dispose
         t_style.Dispose();
         t_content.Dispose();
@@ -102,11 +110,8 @@ public class Sentis_AdaIN : MonoBehaviour
     void Check_Style()
     {
         if (set_style == _prev_state) { }
-        if (set_style != _prev_state)
-        {
-            _prev_state = set_style;
-            rawImageTexture.texture = textures[(int)set_style];
-            Sentis_Execute();
-        }
+        _prev_state = set_style;
+        rawImageTexture.texture = textures[(int)set_style];
+        Sentis_Execute();
     }
 }
