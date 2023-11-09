@@ -32,7 +32,7 @@ public class Sentis_AdaIN : MonoBehaviour
         asheville,
         brushstrokes,
         contrast_of_forms,
-        /*en_campo_gris,
+        en_campo_gris,
         flower_of_life,
         goeritz,
         impronte_d_artista,
@@ -47,7 +47,7 @@ public class Sentis_AdaIN : MonoBehaviour
         trial,
         woman_in_peasant_dress,
         woman_in_peasant_dress_cropped,
-        woman_with_hat_matisse*/
+        woman_with_hat_matisse
     }
     public style_list set_style = style_list.antimonocromatismo;
     Texture2D[] textures;
@@ -56,7 +56,7 @@ public class Sentis_AdaIN : MonoBehaviour
     private void Awake()
     {
         m_RuntimeModel = ModelLoader.Load(_AdaINModel);
-        m_Engine = WorkerFactory.CreateWorker(BackendType.CPU, m_RuntimeModel);
+        m_Engine = WorkerFactory.CreateWorker(BackendType.GPUCompute, m_RuntimeModel);
         rawImageTexture = _rawstyle.GetComponent<RawImage>();
         LoadResources();
         Sentis_Execute();
@@ -71,29 +71,19 @@ public class Sentis_AdaIN : MonoBehaviour
     {
         //Reset
         InputTensors = new Dictionary<string, Tensor>();
-        Profiler.BeginSample("Textrues to Tensors");
         //Resize
         t_style = TextureConverter.ToTensor(textures[(int)set_style], 512, 512, 3); //이미지 크기 조절
         t_content = TextureConverter.ToTensor(_content);
-        Profiler.EndSample();
-        Profiler.BeginSample("Inputs");
         //Add
         InputTensors.Add("style", t_style);
         InputTensors.Add("content", t_content);
-        Profiler.EndSample();
-        Profiler.BeginSample("Excute the engine");
         //Output
         TensorFloat t_output = m_Engine.Execute(InputTensors).PeekOutput() as TensorFloat;
-        Profiler.EndSample();
-        Profiler.BeginSample("Tensor to texture");
         TextureConverter.RenderToTexture(t_output, result);
-        Profiler.EndSample();
-        Profiler.BeginSample("Dispose");
         //Dispose
         t_style.Dispose();
         t_content.Dispose();
         t_output.Dispose();
-        Profiler.EndSample();
     }
 
     void LoadResources()
