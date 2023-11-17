@@ -6,7 +6,7 @@ using Unity.Sentis;
 using UnityEngine.UI;
 using UnityEngine.Profiling;
 
-public class Sentis_AdaIN : MonoBehaviour
+public class AdaIN_Basic : MonoBehaviour
 {
     public ModelAsset _AdaINModel;
     public Texture2D _content;
