@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System;
 using Unity.Sentis;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -7,11 +8,12 @@ using UnityEngine.Rendering;
 public class TTS : MonoBehaviour
 {
     public ModelAsset _AdaINModel;
-    public Texture2D _style;
     public RenderTexture _content;
+    public _Style_List updated_style = _Style_List.antimonocromatismo;
     public RenderTexture _result;
     public Camera _cam;
     Dictionary<string, Tensor> _InputTensors;
+    Texture2D[] _textures;
     //Tensors
     TensorFloat t_style;
     TensorFloat t_content;
@@ -21,13 +23,47 @@ public class TTS : MonoBehaviour
     Model _RuntimeModel;
     IWorker _Engine;
 
-    // Start is called before the first frame update
+    public enum _Style_List
+    {
+        antimonocromatismo,
+        asheville,
+        brushstrokes,
+        contrast_of_forms,
+        en_campo_gris,
+        flower_of_life,
+        goeritz,
+        impronte_d_artista,
+        la_muse,
+        mondrian,
+        mondrian_cropped,
+        picasso_seated_nude_hr,
+        picasso_self_portrait,
+        scene_de_rue,
+        sketch,
+        the_resevoir_at_poitiers,
+        trial,
+        woman_in_peasant_dress,
+        woman_in_peasant_dress_cropped,
+        woman_with_hat_matisse
+    }
+
     void Start()
     {
         _RuntimeModel = ModelLoader.Load(_AdaINModel);
         _cam = GetComponent<Camera>();
         _Engine = WorkerFactory.CreateWorker(BackendType.GPUCompute, _RuntimeModel);
+        LoadResources();
         RenderPipelineManager.endFrameRendering += OnEndFrameRendering;
+    }
+    void LoadResources()
+    {
+        int enumLength = Enum.GetValues(typeof(_Style_List)).Length;
+        _textures = new Texture2D[enumLength];
+        for (int i = 0; i < enumLength; i++)
+        {
+            string _name = ((_Style_List)i).ToString();
+            _textures[i] = Resources.Load<Texture2D>(_name);
+        }
     }
 
     void OnEndFrameRendering(ScriptableRenderContext context, Camera[] cameras)
@@ -37,14 +73,12 @@ public class TTS : MonoBehaviour
 
     void Exctue_Sents()
     {
-        //Rotated the Camera
-        transform.eulerAngles = new Vector3(0, 0, 180);
         _cam.targetTexture = _content;
         //Reset
         _InputTensors = new Dictionary<string, Tensor>();
         //Resize
-        t_content = TextureConverter.ToTensor(_content);
-        t_style = TextureConverter.ToTensor(_style, 512, 512, 3); //??©ö??? ??¡¾? ?¢Ò??
+        t_content = TextureConverter.ToTensor(_content, 512, 512 ,3);
+        t_style = TextureConverter.ToTensor(_textures[(int)updated_style], 512, 512, 3);
         //Add
         _InputTensors.Add("style", t_style);
         _InputTensors.Add("content", t_content);
