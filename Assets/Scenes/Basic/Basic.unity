@@ -181,7 +181,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Texture: {fileID: 2800000, guid: 0d93925e64210a2448c4132d58366deb, type: 3}
+  m_Texture: {fileID: 2800000, guid: 3ee7051b9e78c734fb9101dbe0a90367, type: 3}
   m_UVRect:
     serializedVersion: 2
     x: 0
@@ -227,10 +227,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _AdaINModel: {fileID: 5022602860645237092, guid: 4758e0b235166e1498ba801d72a066e8, type: 3}
   _style: {fileID: 2800000, guid: 3ee7051b9e78c734fb9101dbe0a90367, type: 3}
-  _content: {fileID: 2800000, guid: 0d93925e64210a2448c4132d58366deb, type: 3}
-  result: {fileID: 8400000, guid: 2911ea989c62b0749a836e4c92b0772f, type: 2}
+  _content: {fileID: 2800000, guid: 3ee7051b9e78c734fb9101dbe0a90367, type: 3}
+  _result: {fileID: 0}
   _rawstyle: {fileID: 126032828}
+  _rawcontent: {fileID: 0}
   set_style: 0
+  set_content: 0
 --- !u!4 &43721583
 Transform:
   m_ObjectHideFlags: 0
